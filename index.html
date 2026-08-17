@@ -147,8 +147,20 @@ button:focus-visible, textarea:focus-visible, input:focus-visible { outline: 2px
 #add-missed { width: 100%; font-family: var(--mono); font-size: 10px; letter-spacing: .14em; color: var(--dim); border: 1px dashed var(--line); border-radius: 14px; padding: 13px 0; margin-bottom: 14px; }
 
 /* editor sheet */
-#editor { position: fixed; inset: 0; background: var(--bg); z-index: 80; display: none; flex-direction: column; }
-#editor.on { display: flex; }
+#editor, #daypick { position: fixed; inset: 0; background: var(--bg); z-index: 80; display: none; flex-direction: column; }
+#daypick { z-index: 75; }
+#editor.on, #daypick.on { display: flex; }
+.dp-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.dp-nav button { width: 44px; height: 44px; border: 1px solid var(--line); border-radius: 12px; font-family: var(--mono); font-size: 14px; color: var(--dim); }
+.dp-nav b { font-family: var(--serif); font-weight: 400; font-size: 24px; }
+.dp-dow { display: grid; grid-template-columns: repeat(7,1fr); gap: 6px; margin-bottom: 8px; }
+.dp-dow span { text-align: center; font-family: var(--mono); font-size: 9px; letter-spacing: .06em; color: var(--faint); }
+.dp-grid { display: grid; grid-template-columns: repeat(7,1fr); gap: 6px; }
+.dp-cell { aspect-ratio: 1; min-height: 42px; border-radius: 12px; border: 1px solid transparent; font-family: var(--mono); font-size: 13px; color: var(--dim); }
+.dp-cell.has { border-color: var(--accent-line); color: var(--text); }
+.dp-cell.today { border-color: var(--accent); color: var(--accent); font-weight: 700; }
+.dp-cell.future { opacity: .25; }
+.dp-cell.blank { border: none; }
 .ed-head { display: flex; align-items: center; justify-content: space-between; padding: calc(16px + env(safe-area-inset-top)) 20px 14px; border-bottom: 1px solid var(--line); }
 .ed-head h3 { font-family: var(--serif); font-weight: 400; font-size: 26px; margin: 0; }
 .ed-head .sub { font-family: var(--mono); font-size: 10px; letter-spacing: .14em; color: var(--faint); display: block; margin-top: 3px; }
@@ -358,7 +370,6 @@ nav { position: fixed; left: 0; right: 0; bottom: 0; background: var(--bg); bord
       <div class="rule"></div>
     </header>
     <button id="add-missed">+ ADD OR EDIT A SPECIFIC DAY</button>
-    <input type="date" id="missed-date" style="position:absolute;opacity:0;width:1px;height:1px;pointer-events:none" />
     <div class="searchbar">
       <input id="search" type="search" placeholder="Search your entries…" autocomplete="off" />
       <button id="search-clear">×</button>
@@ -479,6 +490,23 @@ nav { position: fixed; left: 0; right: 0; bottom: 0; background: var(--bg); bord
   <button class="tab" data-view="trends">TRENDS</button>
   <button class="tab" data-view="settings">SETUP</button>
 </div></nav>
+
+<div id="daypick">
+  <div class="ed-head">
+    <div><h3>Pick a day</h3><span class="sub">TAP ANY DATE TO ADD OR EDIT IT</span></div>
+    <button id="dp-close">×</button>
+  </div>
+  <div class="ed-body">
+    <div class="dp-nav">
+      <button id="dp-prev">◀</button>
+      <b id="dp-month"></b>
+      <button id="dp-next">▶</button>
+    </div>
+    <div class="dp-dow"><span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span></div>
+    <div class="dp-grid" id="dp-grid"></div>
+    <p class="set-note" id="dp-note"></p>
+  </div>
+</div>
 
 <div id="editor">
   <div class="ed-head">
@@ -875,15 +903,54 @@ $("ed-delete").addEventListener("click", () => {
   if (editorDate === entryDay) { hydrateFor(entryDay); buildRatings(); buildGym(); paintWordCount(); paintLiveTags(); autoGrow(); }
   closeEditor(); paintStreak(); paintAutosave("idle"); renderOnThisDay(); renderPast();
 });
-$("add-missed").addEventListener("click", () => {
-  const inp = $("missed-date");
-  inp.max = todayKey(); inp.value = todayKey();
-  if (inp.showPicker) { try { inp.showPicker(); return; } catch (e) {} }
-  inp.style.position = "static"; inp.style.opacity = "1"; inp.style.width = "100%";
-  inp.style.height = "auto"; inp.style.pointerEvents = "auto";
-  inp.className = "field"; inp.focus();
+let pickMonth = null;
+function openDayPick() {
+  const t = new Date();
+  pickMonth = new Date(t.getFullYear(), t.getMonth(), 1);
+  renderDayPick();
+  $("daypick").classList.add("on");
+}
+function closeDayPick() { $("daypick").classList.remove("on"); }
+function renderDayPick() {
+  const y = pickMonth.getFullYear(), mo = pickMonth.getMonth();
+  $("dp-month").textContent = MONTHS[mo] + " " + y;
+  const first = new Date(y, mo, 1).getDay();
+  const days = new Date(y, mo + 1, 0).getDate();
+  const tk = todayKey();
+  let html = "";
+  for (let i = 0; i < first; i++) html += '<span class="dp-cell blank"></span>';
+  let count = 0;
+  for (let d = 1; d <= days; d++) {
+    const k = y + "-" + pad2(mo + 1) + "-" + pad2(d);
+    const e = entries[k], future = k > tk;
+    if (e) count++;
+    const avg = e ? entryAvg(e) : null;
+    const tint = avg !== null ? Math.round(20 + (avg / 5) * 44).toString(16).padStart(2, "0") : null;
+    html += '<button class="dp-cell' + (e ? " has" : "") + (k === tk ? " today" : "") + (future ? " future" : "") + '"' +
+      (future ? " disabled" : ' data-pick="' + k + '"') +
+      (tint ? ' style="background:' + (THEMES[settings.theme] || THEMES.dusk).accent + tint + '"' : "") +
+      ">" + d + "</button>";
+  }
+  $("dp-grid").innerHTML = html;
+  const now = new Date();
+  $("dp-next").disabled = (y > now.getFullYear() || (y === now.getFullYear() && mo >= now.getMonth()));
+  $("dp-next").style.opacity = $("dp-next").disabled ? ".3" : "1";
+  $("dp-note").textContent = count
+    ? count + " day" + (count === 1 ? "" : "s") + " logged this month. Brighter squares were better days."
+    : "Nothing logged this month yet.";
+}
+$("add-missed").addEventListener("click", openDayPick);
+$("dp-close").addEventListener("click", closeDayPick);
+$("dp-prev").addEventListener("click", () => { pickMonth.setMonth(pickMonth.getMonth() - 1); renderDayPick(); });
+$("dp-next").addEventListener("click", () => {
+  const now = new Date();
+  if (pickMonth.getFullYear() > now.getFullYear() || (pickMonth.getFullYear() === now.getFullYear() && pickMonth.getMonth() >= now.getMonth())) return;
+  pickMonth.setMonth(pickMonth.getMonth() + 1); renderDayPick();
 });
-$("missed-date").addEventListener("change", ev => { if (ev.target.value) openEditor(ev.target.value); });
+$("dp-grid").addEventListener("click", ev => {
+  const b = ev.target.closest("[data-pick]"); if (!b) return;
+  closeDayPick(); openEditor(b.dataset.pick);
+});
 
 /* ================================================================ THE PAST */
 function sortedDesc() { return Object.values(entries).sort((a,b) => (a.date < b.date ? 1 : -1)); }
