@@ -147,9 +147,65 @@ button:focus-visible, textarea:focus-visible, input:focus-visible { outline: 2px
 #add-missed { width: 100%; font-family: var(--mono); font-size: 10px; letter-spacing: .14em; color: var(--dim); border: 1px dashed var(--line); border-radius: 14px; padding: 13px 0; margin-bottom: 14px; }
 
 /* editor sheet */
-#editor, #daypick { position: fixed; inset: 0; background: var(--bg); z-index: 80; display: none; flex-direction: column; }
+#editor, #daypick, #flatlog, #letterbox { position: fixed; inset: 0; background: var(--bg); z-index: 80; display: none; flex-direction: column; }
 #daypick { z-index: 75; }
-#editor.on, #daypick.on { display: flex; }
+#editor.on, #daypick.on, #flatlog.on, #letterbox.on { display: flex; }
+
+/* bare-minimum log */
+#flat-open { display: block; width: 100%; font-family: var(--mono); font-size: 10px; letter-spacing: .14em; color: var(--dim); border: 1px dashed var(--line); border-radius: 14px; padding: 13px 0; margin-bottom: 22px; }
+.fdots { display: flex; gap: 10px; justify-content: center; margin-top: 6px; }
+.fdots button { width: 52px; height: 52px; border-radius: 26px; border: 1.5px solid var(--line); font-family: var(--serif); font-size: 20px; color: var(--dim); transition: all .15s ease; }
+.fdots button.on { border-color: var(--accent); background: var(--accent); color: var(--bg); transform: scale(1.06); }
+.fyn { display: flex; gap: 8px; }
+.fyn button { flex: 1; font-family: var(--mono); font-size: 11px; letter-spacing: .12em; padding: 15px 0; border: 1px solid var(--line); border-radius: 14px; color: var(--dim); }
+.fyn button.on { color: var(--accent); border-color: var(--accent-line); background: var(--accent-soft); }
+
+/* factor chips (yes / no / unset) */
+.fchip { font-family: var(--mono); font-size: 10px; letter-spacing: .1em; padding: 8px 12px; border-radius: 999px; border: 1px dashed var(--line); color: var(--faint); transition: all .15s ease; }
+.fchip.yes { border-style: solid; border-color: var(--accent); background: var(--accent-soft); color: var(--accent); }
+.fchip.no { border-style: solid; border-color: var(--line); background: var(--panel2); color: var(--dim); text-decoration: line-through; }
+
+/* state cards */
+.statecard { padding: 14px 15px; margin-bottom: 22px; }
+.statecard .sc-head { display: flex; justify-content: space-between; align-items: baseline; font-family: var(--mono); font-size: 10px; letter-spacing: .16em; color: var(--accent); }
+.statecard .sc-x { color: var(--faint); font-family: var(--mono); font-size: 14px; padding: 0 2px; }
+.statecard .sc-letter { font-size: 14.5px; line-height: 1.55; color: var(--text); margin: 10px 0 0; white-space: pre-wrap; font-style: italic; }
+.statecard .sc-from { font-family: var(--mono); font-size: 9px; letter-spacing: .12em; color: var(--faint); margin-top: 8px; }
+.statecard .sc-nudge { font-size: 14px; color: var(--dim); margin: 12px 0 0; padding-top: 12px; border-top: 1px solid var(--line); }
+.statecard .sc-nudge b { color: var(--text); font-weight: 600; }
+.statecard .sc-row { display: flex; gap: 8px; margin-top: 12px; }
+.statecard .sc-btn { font-family: var(--mono); font-size: 9.5px; letter-spacing: .1em; color: var(--dim); border: 1px solid var(--line); border-radius: 10px; padding: 9px 11px; }
+.statecard .sc-btn.hot { color: var(--accent); border-color: var(--accent-line); }
+.statecard .sc-soft { font-family: var(--mono); font-size: 9px; letter-spacing: .1em; color: var(--faint); margin-top: 12px; }
+.sc-addwrap { display: flex; gap: 8px; margin-top: 10px; }
+.sc-addwrap input { flex: 1; }
+
+/* heatmap */
+.hm { display: flex; gap: 3px; overflow-x: auto; padding-bottom: 6px; }
+.hm-col { display: flex; flex-direction: column; gap: 3px; flex: none; }
+.hm-cell { width: 13px; height: 13px; border-radius: 3px; background: var(--panel2); border: none; padding: 0; }
+.hm-cell.out { background: transparent; }
+.hm-legend { display: flex; align-items: center; gap: 5px; font-family: var(--mono); font-size: 9px; letter-spacing: .1em; color: var(--faint); margin-top: 8px; }
+.hm-legend i { width: 11px; height: 11px; border-radius: 3px; display: inline-block; }
+
+/* next-day effects */
+.corr-row { padding: 10px 0; border-bottom: 1px solid var(--line); }
+.corr-row:last-of-type { border-bottom: none; }
+.corr-name { font-size: 14px; font-weight: 500; margin-bottom: 6px; }
+.corr-cols { display: flex; gap: 10px; }
+.corr-cols > div { flex: 1; }
+.corr-cap { font-family: var(--mono); font-size: 8.5px; letter-spacing: .12em; color: var(--faint); margin-bottom: 3px; }
+.corr-val { font-family: var(--mono); font-size: 12.5px; color: var(--text); }
+.corr-val small { color: var(--faint); font-size: 10px; }
+.corr-val .up { color: var(--accent); }
+
+/* letters / nudges management */
+.lrow { display: flex; align-items: center; gap: 10px; padding: 11px 14px; border-bottom: 1px solid var(--line); }
+.lrow:last-child { border-bottom: none; }
+.lrow .lmain { flex: 1; min-width: 0; }
+.lrow .ltxt { font-size: 13.5px; color: var(--dim); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.lrow .lmeta { font-family: var(--mono); font-size: 9px; letter-spacing: .1em; color: var(--faint); margin-top: 3px; }
+.lrow .ldone { text-decoration: line-through; }
 .dp-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
 .dp-nav button { width: 44px; height: 44px; border: 1px solid var(--line); border-radius: 12px; font-family: var(--mono); font-size: 14px; color: var(--dim); }
 .dp-nav b { font-family: var(--serif); font-weight: 400; font-size: 24px; }
@@ -333,6 +389,10 @@ nav { position: fixed; left: 0; right: 0; bottom: 0; background: var(--bg); bord
       <div class="rule"></div>
     </header>
 
+    <button id="flat-open" class="rise">RUNNING ON EMPTY? LOG TODAY IN 3 TAPS</button>
+
+    <div id="statecard-host"></div>
+
     <div class="card rise" id="onthisday">
       <div id="otd-head"><span id="otd-when"></span><button id="otd-close">×</button></div>
       <div id="otd-meta"></div>
@@ -342,6 +402,11 @@ nav { position: fixed; left: 0; right: 0; bottom: 0; background: var(--bg); bord
     <section class="section rise">
       <div class="label">HOW IT'S GOING</div>
       <div class="card ratings" id="ratings"></div>
+    </section>
+
+    <section class="section rise">
+      <div class="label">FACTORS · TAP ONCE FOR YES, TWICE FOR NO</div>
+      <div class="chips" id="factor-chips"></div>
     </section>
 
     <section class="section rise">
@@ -453,6 +518,22 @@ nav { position: fixed; left: 0; right: 0; bottom: 0; background: var(--bg); bord
     </section>
 
     <section class="set-block rise">
+      <div class="label">YOUR SIGNAL</div>
+      <div class="tiny" style="margin-bottom:7px">HEATMAP, QUICK LOG + LOW-DAY CARDS FOLLOW:</div>
+      <div class="seg" id="anchor-seg" style="flex-wrap:wrap"></div>
+      <div class="tiny" style="margin:16px 0 7px">DAILY FACTORS</div>
+      <div class="card" id="factors-editor"></div>
+      <p id="factor-note"></p>
+      <p class="set-note">Factors are yes/no chips on Today, and they feed the same-day and next-day numbers in Trends. Add whatever you want to test.</p>
+    </section>
+
+    <section class="set-block rise">
+      <div class="label">LETTERS + REACH-OUTS</div>
+      <div class="card" id="self-editor"></div>
+      <p class="set-note">Letters you write on clear days surface one at a time on low ones. Names you jot down show up the same way — no streaks, no pressure.</p>
+    </section>
+
+    <section class="set-block rise">
       <div class="label">PIN LOCK</div>
       <div id="pin-area"></div>
       <p id="pin-note"></p>
@@ -468,6 +549,9 @@ nav { position: fixed; left: 0; right: 0; bottom: 0; background: var(--bg); bord
       <div class="rowbtns">
         <button class="btn" id="export-md">READABLE .MD</button>
         <button class="btn" id="export-csv">SHEET .CSV</button>
+      </div>
+      <div class="rowbtns" style="margin-top:8px">
+        <button class="btn" id="export-doc">90-DAY SUMMARY FOR YOUR DOCTOR</button>
       </div>
       <input type="file" id="import-file" accept=".json,application/json" style="display:none" />
       <p id="backup-note"></p>
@@ -490,6 +574,31 @@ nav { position: fixed; left: 0; right: 0; bottom: 0; background: var(--bg); bord
   <button class="tab" data-view="trends">TRENDS</button>
   <button class="tab" data-view="settings">SETUP</button>
 </div></nav>
+
+<div id="flatlog">
+  <div class="ed-head">
+    <div><h3>Bare minimum</h3><span class="sub">A FEW TAPS AND YOU'RE DONE</span></div>
+    <button id="fl-close">×</button>
+  </div>
+  <div class="ed-body">
+    <div class="label" id="fl-anchor-label"></div>
+    <div class="fdots" id="fl-dots"></div>
+    <div id="fl-factors"></div>
+  </div>
+  <div class="ed-foot"><button class="btn primary" id="fl-done">DONE — THAT COUNTS</button></div>
+</div>
+
+<div id="letterbox">
+  <div class="ed-head">
+    <div><h3>To your flat self</h3><span class="sub">SURFACES ON A LOW DAY, IN YOUR OWN WORDS</span></div>
+    <button id="lb-close">×</button>
+  </div>
+  <div class="ed-body">
+    <textarea id="lb-text" class="lined" spellcheck="false" placeholder="What do you know right now that's hard to reach from down there? What actually helps? What's waiting for them on the other side?"></textarea>
+    <p class="set-note">Written from where you are now, for the version of you who can't get here. It'll show up on their screen, dated, in your voice.</p>
+  </div>
+  <div class="ed-foot"><button class="btn primary" id="lb-save">KEEP THIS</button></div>
+</div>
 
 <div id="daypick">
   <div class="ed-head">
@@ -519,7 +628,9 @@ nav { position: fixed; left: 0; right: 0; bottom: 0; background: var(--bg); bord
     <div class="label">ENTRY</div>
     <textarea id="ed-text" class="lined" spellcheck="false" placeholder="What happened that day?" style="margin-bottom:24px"></textarea>
     <div class="label">GYM</div>
-    <div class="chips" id="ed-gym"></div>
+    <div class="chips" id="ed-gym" style="margin-bottom:24px"></div>
+    <div class="label">FACTORS · TAP ONCE YES, TWICE NO</div>
+    <div class="chips" id="ed-factors"></div>
   </div>
   <div class="ed-foot">
     <button class="btn primary" id="ed-save">SAVE</button>
@@ -614,6 +725,10 @@ function loadSettings() {
   if (s.units !== "kg") s.units = "lb";
   if ([60,90,120,180].indexOf(s.restSeconds) < 0) s.restSeconds = 90;
   if (!Array.isArray(s.routines)) s.routines = [];
+  if (!Array.isArray(s.factors)) s.factors = [
+    { key:"slept", label:"Slept well" }, { key:"meds", label:"Meds" }, { key:"social", label:"Social time" }];
+  s.factors = s.factors.filter(f => f && f.key).map(f => ({ key:String(f.key), label:f.label||f.key })).slice(0,6);
+  if (typeof s.anchor !== "string") s.anchor = "awareness";
   return s;
 }
 
@@ -657,7 +772,20 @@ let search = "", activeTag = null, otdDismissed = false;
 let pinBuffer = "", pinStage = null, pinFirst = "", hiddenAt = 0, locked = false;
 let planDay, confirmExDel = null, routineMode = false, wSaveTimer = null;
 let restEnd = 0, restTick = null;
-let editorDate = null, edRatings = {}, edGym = [], edConfirmDel = false;
+let editorDate = null, edRatings = {}, edGym = [], edConfirmDel = false, edFactors = {};
+let factors = {};
+let scDismissed = false, letterOffset = 0, nudgeOffset = 0;
+let flatAnchor = 0, flatFactors = {};
+const SELFKEY = "nightstand-self-v1";
+let selfData = loadJSON(SELFKEY);
+if (!Array.isArray(selfData.letters)) selfData.letters = [];
+if (!Array.isArray(selfData.nudges)) selfData.nudges = [];
+function persistSelf() { writeRaw(SELFKEY, JSON.stringify(selfData)); }
+function anchorMetric() {
+  return settings.metrics.find(m => m.key === settings.anchor) || settings.metrics[0] || { key:"none", label:"Signal", color:"#E8B04B" };
+}
+function anchorVal(e) { return (e && e.ratings && e.ratings[anchorMetric().key]) || 0; }
+function daySeed(k) { let n = 0; for (let i = 0; i < k.length; i++) n = (n + k.charCodeAt(i)) % 997; return n; }
 
 const todayKey = () => dateKey(new Date());
 let entryDay = todayKey();
@@ -668,6 +796,7 @@ function hydrateFor(key) {
   ratings = {};
   settings.metrics.forEach(m => { ratings[m.key] = (e && e.ratings && e.ratings[m.key]) || 0; });
   gym = e ? (e.gym||[]).slice() : [];
+  factors = e && e.factors ? Object.assign({}, e.factors) : {};
   $("entry-text").value = e ? (e.text||"") : "";
 }
 
@@ -812,7 +941,8 @@ $("otd-close").addEventListener("click", () => { otdDismissed = true; $("onthisd
 
 /* ---------- autosave ---------- */
 function hasContent() {
-  return settings.metrics.some(m => ratings[m.key] > 0) || $("entry-text").value.trim().length > 0 || gym.length > 0;
+  return settings.metrics.some(m => ratings[m.key] > 0) || $("entry-text").value.trim().length > 0 || gym.length > 0 ||
+    Object.keys(factors).some(k => factors[k] === true || factors[k] === false);
 }
 function paintAutosave(state) {
   const strip = $("autosave-strip"), text = $("as-text");
@@ -835,14 +965,17 @@ function writeEntry() {
   settings.metrics.forEach(x => { if (ratings[x.key] > 0) r[x.key] = ratings[x.key]; });
   const prev = entries[entryDay];
   if (prev && prev.ratings) Object.keys(prev.ratings).forEach(k => { if (!settings.metrics.some(x => x.key === k)) r[k] = prev.ratings[k]; });
+  const fx = {};
+  Object.keys(factors).forEach(k => { if (factors[k] === true || factors[k] === false) fx[k] = factors[k]; });
   entries[entryDay] = {
     date: entryDay, weekday: WEEKDAYS[parseKey(entryDay).getDay()], savedAt: d.toISOString(),
     timeLabel: h+":"+m+" "+ampm, ratings: r, text: $("entry-text").value.trim(), gym: gym.slice(),
+    factors: fx,
   };
   persist(); paintStreak(); paintAutosave("saved");
 }
 function scheduleAutosave(ms) { lastInputAt = Date.now(); clearTimeout(autosaveTimer); paintAutosave("pending"); autosaveTimer = setTimeout(() => { autosaveTimer = null; writeEntry(); }, ms); }
-function saveNow() { lastInputAt = Date.now(); clearTimeout(autosaveTimer); autosaveTimer = null; writeEntry(); }
+function saveNow() { lastInputAt = Date.now(); clearTimeout(autosaveTimer); autosaveTimer = null; writeEntry(); renderStateCard(); }
 function flushAutosave() { if (!autosaveTimer) return; clearTimeout(autosaveTimer); autosaveTimer = null; writeEntry(); }
 
 $("entry-text").addEventListener("input", () => { paintWordCount(); paintLiveTags(); autoGrow(); scheduleAutosave(800); });
@@ -866,6 +999,8 @@ function openEditor(key) {
     edRatings[k] = edRatings[k] === v ? 0 : v; paintRatingsInto($("ed-ratings"), () => edRatings);
   });
   buildChips($("ed-gym"), () => edGym, a => { edGym = a; });
+  edFactors = e && e.factors ? Object.assign({}, e.factors) : {};
+  buildFactorChips($("ed-factors"), () => edFactors, v => { edFactors = v; });
   $("ed-delete").style.display = e ? "block" : "none";
   $("ed-delete").textContent = "DELETE";
   $("ed-delete").classList.remove("bad2");
@@ -878,29 +1013,33 @@ $("ed-text").addEventListener("input", () => autoGrow($("ed-text")));
 
 $("ed-save").addEventListener("click", () => {
   if (!editorDate) return;
-  const any = Object.keys(edRatings).some(k => edRatings[k] > 0) || $("ed-text").value.trim() || edGym.length;
+  const any = Object.keys(edRatings).some(k => edRatings[k] > 0) || $("ed-text").value.trim() || edGym.length ||
+    Object.keys(edFactors).some(k => edFactors[k] === true || edFactors[k] === false);
   if (!any) { if (entries[editorDate]) delete entries[editorDate]; }
   else {
     const prev = entries[editorDate], r = {};
     Object.keys(edRatings).forEach(k => { if (edRatings[k] > 0) r[k] = edRatings[k]; });
     if (prev && prev.ratings) Object.keys(prev.ratings).forEach(k => { if (!settings.metrics.some(x => x.key === k)) r[k] = prev.ratings[k]; });
     const d = parseKey(editorDate);
+    const fx = {};
+    Object.keys(edFactors).forEach(k => { if (edFactors[k] === true || edFactors[k] === false) fx[k] = edFactors[k]; });
     entries[editorDate] = {
       date: editorDate, weekday: WEEKDAYS[d.getDay()],
       savedAt: (prev && prev.savedAt) || new Date().toISOString(),
       timeLabel: (prev && prev.timeLabel) || "EDITED",
       ratings: r, text: $("ed-text").value.trim(), gym: edGym.slice(),
+      factors: fx,
     };
   }
   persist();
-  if (editorDate === entryDay) { hydrateFor(entryDay); buildRatings(); buildGym(); paintWordCount(); paintLiveTags(); autoGrow(); }
+  if (editorDate === entryDay) { hydrateFor(entryDay); buildRatings(); buildGym(); buildTodayFactors(); paintWordCount(); paintLiveTags(); autoGrow(); renderStateCard(); }
   closeEditor(); paintStreak(); paintAutosave("idle"); renderOnThisDay(); renderPast();
 });
 $("ed-delete").addEventListener("click", () => {
   if (!editorDate) return;
   if (!edConfirmDel) { edConfirmDel = true; $("ed-delete").textContent = "TAP AGAIN TO DELETE"; return; }
   delete entries[editorDate]; persist();
-  if (editorDate === entryDay) { hydrateFor(entryDay); buildRatings(); buildGym(); paintWordCount(); paintLiveTags(); autoGrow(); }
+  if (editorDate === entryDay) { hydrateFor(entryDay); buildRatings(); buildGym(); buildTodayFactors(); paintWordCount(); paintLiveTags(); autoGrow(); renderStateCard(); }
   closeEditor(); paintStreak(); paintAutosave("idle"); renderOnThisDay(); renderPast();
 });
 let pickMonth = null;
@@ -924,8 +1063,8 @@ function renderDayPick() {
     const k = y + "-" + pad2(mo + 1) + "-" + pad2(d);
     const e = entries[k], future = k > tk;
     if (e) count++;
-    const avg = e ? entryAvg(e) : null;
-    const tint = avg !== null ? Math.round(20 + (avg / 5) * 44).toString(16).padStart(2, "0") : null;
+    const av = e ? (anchorVal(e) || entryAvg(e)) : null;
+    const tint = av ? Math.round(20 + (av / 5) * 44).toString(16).padStart(2, "0") : null;
     html += '<button class="dp-cell' + (e ? " has" : "") + (k === tk ? " today" : "") + (future ? " future" : "") + '"' +
       (future ? " disabled" : ' data-pick="' + k + '"') +
       (tint ? ' style="background:' + (THEMES[settings.theme] || THEMES.dusk).accent + tint + '"' : "") +
@@ -1311,6 +1450,8 @@ function renderTrends() {
     '<div class="tile"><div class="tile-value'+(s>0?" accent":"")+'">'+s+'</div><div class="tile-label">STREAK</div></div>'+
     '<div class="tile"><div class="tile-value">'+totalWords+'</div><div class="tile-label">WORDS</div></div></div>';
 
+  html += heatmapHTML(list);
+
   html += '<section class="section rise"><div class="label">AVERAGE PER FEELING · ALL TIME</div><div class="card" style="padding:18px 16px">';
   if (!settings.metrics.length) html += '<p class="nodata">NOTHING TRACKED YET</p>';
   settings.metrics.forEach(m => {
@@ -1412,6 +1553,8 @@ function renderTrends() {
     html += "</div></section>";
   }
 
+  html += effectsHTML(list);
+
   const wKeys = Object.keys(workouts).filter(k => (workouts[k].exercises||[]).length);
   if (wKeys.length) {
     let vol = 0, sets = 0;
@@ -1429,7 +1572,11 @@ function renderTrends() {
     host.querySelectorAll("[data-w]").forEach(el => { el.style.width = el.dataset.w+"%"; });
   }));
 }
-$("trends-body").addEventListener("click", ev => { if (ev.target.closest("[data-goto]")) switchView("today"); });
+$("trends-body").addEventListener("click", ev => {
+  const hm = ev.target.closest("[data-hm]");
+  if (hm) { openEditor(hm.dataset.hm); return; }
+  if (ev.target.closest("[data-goto]")) switchView("today");
+});
 
 /* ================================================================ SETTINGS */
 function renderMetrics() {
@@ -1576,7 +1723,8 @@ function download(text, mime, filename) {
   setTimeout(() => URL.revokeObjectURL(a.href), 5000);
 }
 $("export-json").addEventListener("click", () => {
-  download(JSON.stringify({ version:3, entries, workouts, routines: settings.routines }, null, 2),
+  download(JSON.stringify({ version:4, entries, workouts, routines: settings.routines,
+    self: selfData, prefs: { metrics: settings.metrics, factors: settings.factors, anchor: settings.anchor } }, null, 2),
     "application/json", "nightstand-backup-"+todayKey()+".json");
   settings.lastBackup = new Date().toISOString(); saveSettings();
   $("backup-note").textContent = Object.keys(entries).length+" ENTRIES + "+Object.keys(workouts).length+" WORKOUTS BACKED UP";
@@ -1644,11 +1792,26 @@ $("import-file").addEventListener("change", ev => {
         });
       }
       if (Array.isArray(data.routines)) settings.routines = data.routines;
+      if (data.self && typeof data.self === "object") {
+        if (Array.isArray(data.self.letters)) data.self.letters.forEach(l => {
+          if (l && l.text && !selfData.letters.some(x => x.id === l.id)) selfData.letters.push(l); });
+        if (Array.isArray(data.self.nudges)) data.self.nudges.forEach(nu => {
+          if (nu && nu.name && !selfData.nudges.some(x => x.id === nu.id)) selfData.nudges.push(nu); });
+        persistSelf();
+      }
+      if (data.prefs && typeof data.prefs === "object") {
+        if (Array.isArray(data.prefs.metrics) && data.prefs.metrics.length)
+          settings.metrics = data.prefs.metrics.filter(m=>m&&m.key).map(m=>({key:String(m.key),label:m.label||m.key,sub:m.sub||"",color:m.color||"#E8B04B",retired:!!m.retired}));
+        if (Array.isArray(data.prefs.factors)) settings.factors = data.prefs.factors.filter(f=>f&&f.key).map(f=>({key:String(f.key),label:f.label||f.key})).slice(0,6);
+        if (typeof data.prefs.anchor === "string") settings.anchor = data.prefs.anchor;
+        if (!settings.metrics.some(m => m.key === settings.anchor)) settings.anchor = settings.metrics[0] ? settings.metrics[0].key : "awareness";
+        renderMetrics(); renderAnchorSeg(); renderFactorsEditor(); renderSelfEditor();
+      }
       persist(); persistW(); saveSettings();
       $("backup-note").textContent = n+" ENTRIES"+(wn?" + "+wn+" WORKOUTS":"")+" IMPORTED — MERGED BY DATE";
       expanded = null; confirmDel = null;
-      hydrateFor(entryDay); buildRatings(); buildGym(); paintWordCount(); paintLiveTags(); autoGrow();
-      paintStreak(); paintAutosave("idle"); renderOnThisDay(); renderPast(); renderPlanner();
+      hydrateFor(entryDay); buildRatings(); buildGym(); buildTodayFactors(); paintWordCount(); paintLiveTags(); autoGrow();
+      paintStreak(); paintAutosave("idle"); renderOnThisDay(); renderStateCard(); renderPast(); renderPlanner();
     } catch (e) { $("backup-note").textContent = "COULDN'T READ THAT FILE — EXPECTED A NIGHTSTAND .JSON BACKUP"; }
   };
   reader.readAsText(file); ev.target.value = "";
@@ -1669,7 +1832,7 @@ function switchView(name) {
   if (name === "past") renderPast();
   if (name === "gym") renderPlanner();
   if (name === "trends") renderTrends();
-  if (name === "settings") { renderThemes(); renderMetrics(); renderGymSettings(); renderPinArea(); paintBackupAge(); }
+  if (name === "settings") { renderThemes(); renderMetrics(); renderGymSettings(); renderAnchorSeg(); renderFactorsEditor(); renderSelfEditor(); renderPinArea(); paintBackupAge(); }
   window.scrollTo(0,0);
 }
 document.querySelectorAll(".tab").forEach(t => t.addEventListener("click", () => switchView(t.dataset.view)));
@@ -1687,11 +1850,414 @@ setInterval(() => {
     const idle = !autosaveTimer && Date.now()-lastInputAt > 5*60*1000;
     if (idle || !hasContent()) {
       entryDay = tk; planDay = tk; hydrateFor(entryDay);
-      buildRatings(); buildGym(); paintWordCount(); paintLiveTags(); autoGrow();
-      paintStreak(); paintAutosave("idle"); otdDismissed = false; renderOnThisDay();
+      buildRatings(); buildGym(); buildTodayFactors(); paintWordCount(); paintLiveTags(); autoGrow();
+      paintStreak(); paintAutosave("idle"); otdDismissed = false; scDismissed = false;
+      letterOffset = 0; nudgeOffset = 0; renderOnThisDay(); renderStateCard();
     }
   }
 }, 1000);
+
+/* ================================================================
+   SIGNAL LAYER — factors, state cards, flat log, letters, nudges,
+   heatmap, next-day effects, doctor summary
+   ================================================================ */
+
+/* ---------- factor chips (3-state: unset -> yes -> no -> unset) ---------- */
+function buildFactorChips(host, getF, setF) {
+  const F = settings.factors;
+  if (!F.length) { host.innerHTML = '<p class="nodata">NO FACTORS — ADD SOME IN SETUP</p>'; return; }
+  host.innerHTML = F.map(f => '<button class="fchip" data-fk="'+esc(f.key)+'"></button>').join("");
+  const paint = () => {
+    const cur = getF();
+    host.querySelectorAll(".fchip").forEach(c => {
+      const f = F.find(x => x.key === c.dataset.fk); if (!f) return;
+      const v = cur[f.key];
+      c.classList.toggle("yes", v === true);
+      c.classList.toggle("no", v === false);
+      c.textContent = (v === true ? "✓ " : v === false ? "✗ " : "") + f.label.toUpperCase();
+    });
+  };
+  host.onclick = ev => {
+    const c = ev.target.closest(".fchip"); if (!c) return;
+    const cur = Object.assign({}, getF()), k = c.dataset.fk;
+    cur[k] = cur[k] === true ? false : cur[k] === false ? undefined : true;
+    if (cur[k] === undefined) delete cur[k];
+    setF(cur); paint();
+  };
+  paint();
+}
+function buildTodayFactors() {
+  buildFactorChips($("factor-chips"), () => factors, v => { factors = v; saveNow(); });
+}
+
+/* ---------- state card (clear day / low day) ---------- */
+function pickLetter() {
+  const L = selfData.letters;
+  if (!L.length) return null;
+  return L[(daySeed(todayKey()) + letterOffset) % L.length];
+}
+function pickNudge() {
+  const open = selfData.nudges.filter(n => !n.doneOn);
+  if (!open.length) return null;
+  return open[(daySeed(todayKey()) + nudgeOffset) % open.length];
+}
+function renderStateCard() {
+  const host = $("statecard-host");
+  const am = anchorMetric();
+  const v = ratings[am.key] || 0;
+  const ta = $("entry-text");
+
+  if (v >= 4) ta.placeholder = "You're at a "+v+" — pin it down while you're in it. What did you do today? Who did you see? How did you sleep last night? Future you can't retrieve this; you can.";
+  else if (v > 0 && v <= 2) ta.placeholder = "One sentence is plenty. Three words count.";
+
+  if (scDismissed || v === 0 || v === 3) { host.innerHTML = ""; return; }
+
+  if (v >= 4) {
+    host.innerHTML =
+      '<div class="card statecard rise"><div class="sc-head"><span>CLEAR DAY — USE IT</span><button class="sc-x" data-scx="1">×</button></div>'+
+      '<div class="sc-row"><button class="sc-btn hot" data-scletter="1">✎ WRITE TO YOUR FLAT SELF</button>'+
+      '<button class="sc-btn" data-scnudgetgl="1">+ SOMEONE TO REACH OUT TO</button></div>'+
+      '<div class="sc-addwrap" id="sc-addwrap" style="display:none"><input class="field" id="sc-name" placeholder="Who came to mind?" maxlength="40" />'+
+      '<button class="sc-btn hot" data-scnudgeadd="1" style="flex:none">ADD</button></div>'+
+      '<div class="sc-soft" id="sc-msg">'+(selfData.letters.length ? selfData.letters.length+" LETTER"+(selfData.letters.length===1?"":"S")+" BANKED" : "NOTHING BANKED YET — TODAY'S A GOOD DAY TO START")+'</div></div>';
+    return;
+  }
+
+  /* low day */
+  const letter = pickLetter(), nudge = pickNudge();
+  let inner = '<div class="sc-head"><span>FROM A CLEARER DAY</span><button class="sc-x" data-scx="1">×</button></div>';
+  if (letter) {
+    inner += '<p class="sc-letter">'+esc(letter.text)+'</p><div class="sc-from">— YOU, '+fmtShort(letter.on).toUpperCase()+(selfData.letters.length>1?' · <button class="sc-x" data-scanother="1" style="padding:0;font-size:9px;letter-spacing:.12em">ANOTHER</button>':"")+'</div>';
+  } else {
+    inner += '<p class="sc-letter" style="color:var(--dim)">Logged. That counts — that\'s the whole job today.</p>';
+  }
+  if (nudge) {
+    inner += '<div class="sc-nudge">On '+fmtShort(nudge.on)+' you wanted to reach out to <b>'+esc(nudge.name)+'</b>.'+
+      '<div class="sc-row"><button class="sc-btn hot" data-scdone="'+esc(nudge.id)+'">I DID</button>'+
+      '<button class="sc-btn" data-scskip="1">NOT TODAY</button></div></div>';
+  }
+  inner += '<div class="sc-soft">NO PRESSURE ON ANY OF IT.</div>';
+  host.innerHTML = '<div class="card statecard rise">'+inner+'</div>';
+}
+$("statecard-host").addEventListener("click", ev => {
+  const t = ev.target.closest("[data-scx],[data-scletter],[data-scnudgetgl],[data-scnudgeadd],[data-scanother],[data-scdone],[data-scskip]");
+  if (!t) return;
+  const d = t.dataset;
+  if (d.scx) { scDismissed = true; renderStateCard(); return; }
+  if (d.scletter) { openLetterBox(); return; }
+  if (d.scnudgetgl) { const w = $("sc-addwrap"); w.style.display = w.style.display === "none" ? "flex" : "none"; const i = $("sc-name"); if (w.style.display === "flex" && i) i.focus(); return; }
+  if (d.scnudgeadd) {
+    const i = $("sc-name"), name = (i.value || "").trim();
+    if (!name) return;
+    selfData.nudges.push({ id: uid(), name, on: todayKey() });
+    persistSelf(); i.value = "";
+    $("sc-msg").textContent = "NOTED — IT'LL SURFACE ON A LOW DAY";
+    return;
+  }
+  if (d.scanother) { letterOffset++; renderStateCard(); return; }
+  if (d.scdone) {
+    const n = selfData.nudges.find(x => x.id === d.scdone);
+    if (n) { n.doneOn = todayKey(); persistSelf(); }
+    renderStateCard(); return;
+  }
+  if (d.scskip) { nudgeOffset++; renderStateCard(); }
+});
+
+/* ---------- letter compose ---------- */
+function openLetterBox() { $("lb-text").value = ""; $("letterbox").classList.add("on"); autoGrow($("lb-text")); }
+$("lb-close").addEventListener("click", () => $("letterbox").classList.remove("on"));
+$("lb-text").addEventListener("input", () => autoGrow($("lb-text")));
+$("lb-save").addEventListener("click", () => {
+  const t = $("lb-text").value.trim();
+  if (!t) { $("letterbox").classList.remove("on"); return; }
+  selfData.letters.push({ id: uid(), on: todayKey(), text: t });
+  persistSelf();
+  $("letterbox").classList.remove("on");
+  renderStateCard();
+});
+
+/* ---------- bare-minimum flat log ---------- */
+function openFlat() {
+  const am = anchorMetric();
+  flatAnchor = ratings[am.key] || 0;
+  flatFactors = Object.assign({}, factors);
+  $("fl-anchor-label").textContent = am.label.toUpperCase() + " · RIGHT NOW";
+  $("fl-dots").innerHTML = [1,2,3,4,5].map(v => '<button data-fv="'+v+'"'+(flatAnchor===v?' class="on"':"")+'>'+v+"</button>").join("");
+  const F = settings.factors.filter(f => f.key === "slept" || f.key === "meds");
+  const shown = F.length ? F : settings.factors.slice(0,2);
+  $("fl-factors").innerHTML = shown.map(f =>
+    '<div class="label" style="margin-top:26px">'+esc(f.label.toUpperCase())+'</div>'+
+    '<div class="fyn" data-ff="'+esc(f.key)+'">'+
+      '<button data-fyv="1"'+(flatFactors[f.key]===true?' class="on"':"")+'>YES</button>'+
+      '<button data-fyv="0"'+(flatFactors[f.key]===false?' class="on"':"")+'>NO</button></div>').join("");
+  $("flatlog").classList.add("on");
+}
+$("flat-open").addEventListener("click", openFlat);
+$("fl-close").addEventListener("click", () => $("flatlog").classList.remove("on"));
+$("fl-dots").addEventListener("click", ev => {
+  const b = ev.target.closest("[data-fv]"); if (!b) return;
+  flatAnchor = +b.dataset.fv;
+  $("fl-dots").querySelectorAll("button").forEach(x => x.classList.toggle("on", +x.dataset.fv === flatAnchor));
+});
+$("fl-factors").addEventListener("click", ev => {
+  const b = ev.target.closest("[data-fyv]"); if (!b) return;
+  const wrap = b.closest("[data-ff]"), k = wrap.dataset.ff, v = b.dataset.fyv === "1";
+  flatFactors[k] = flatFactors[k] === v ? undefined : v;
+  if (flatFactors[k] === undefined) delete flatFactors[k];
+  wrap.querySelectorAll("button").forEach(x => x.classList.toggle("on", flatFactors[k] !== undefined && (x.dataset.fyv === "1") === flatFactors[k]));
+});
+$("fl-done").addEventListener("click", () => {
+  const am = anchorMetric();
+  if (flatAnchor > 0) ratings[am.key] = flatAnchor;
+  factors = Object.assign({}, factors, flatFactors);
+  Object.keys(factors).forEach(k => { if (factors[k] === undefined) delete factors[k]; });
+  paintRatingsInto($("ratings"), () => ratings);
+  buildTodayFactors();
+  $("flatlog").classList.remove("on");
+  saveNow();
+});
+
+/* ---------- heatmap (last 15 weeks) ---------- */
+function heatmapHTML(list) {
+  const am = anchorMetric();
+  const today = new Date(); today.setHours(0,0,0,0);
+  const end = new Date(today); end.setDate(end.getDate() + (6 - end.getDay()));
+  const start = new Date(end); start.setDate(start.getDate() - (15*7 - 1));
+  const acc = (THEMES[settings.theme] || THEMES.dusk).accent;
+  let cols = "", monthMarks = [];
+  const cur = new Date(start);
+  for (let w = 0; w < 15; w++) {
+    let cells = "";
+    for (let dow = 0; dow < 7; dow++) {
+      const k = dateKey(cur);
+      const e = entries[k];
+      const future = cur > today;
+      if (cur.getDate() === 1) monthMarks.push({ w, label: MONTHS_SHORT[cur.getMonth()].toUpperCase() });
+      if (future) cells += '<span class="hm-cell out"></span>';
+      else {
+        const v = e ? (anchorVal(e) || null) : null;
+        const style = v ? ' style="background:'+acc+Math.round(38+(v/5)*217).toString(16).padStart(2,"0")+'"'
+          : e ? ' style="background:'+acc+'22"' : "";
+        cells += '<button class="hm-cell" data-hm="'+k+'"'+style+' aria-label="'+k+'"></button>';
+      }
+      cur.setDate(cur.getDate()+1);
+    }
+    cols += '<div class="hm-col">'+cells+'</div>';
+  }
+  return '<section class="section rise"><div class="label">THE GRID · '+esc(am.label.toUpperCase())+' BY DAY · LAST 15 WEEKS</div>'+
+    '<div class="card" style="padding:14px"><div class="hm">'+cols+'</div>'+
+    '<div class="hm-legend"><span>FLAT</span><i style="background:'+acc+'38"></i><i style="background:'+acc+'6E"></i><i style="background:'+acc+'A4"></i><i style="background:'+acc+'DA"></i><i style="background:'+acc+'"></i><span>CLEAR</span>'+
+    '<span style="margin-left:auto">TAP A SQUARE TO OPEN IT</span></div></div></section>';
+}
+
+/* ---------- next-day effects ---------- */
+function effectsHTML(list) {
+  const am = anchorMetric();
+  const byDate = {};
+  list.forEach(e => { byDate[e.date] = e; });
+  const factorDefs = settings.factors.map(f => ({ key: f.key, label: f.label, get: e => (e.factors ? e.factors[f.key] : undefined) }))
+    .concat([{ key: "__train", label: "Trained", get: e => (e.gym||[]).includes(REST) ? false : (trainedGroups(e).length ? true : undefined) }]);
+  const fmtPair = (yes, no) => {
+    if (yes.n < 4 || no.n < 4) return '<span class="corr-val" style="color:var(--faint)">needs more days <small>('+yes.n+'y/'+no.n+'n)</small></span>';
+    const d = yes.avg - no.avg, up = d >= 0.3, down = d <= -0.3;
+    return '<span class="corr-val"><span class="'+(up?"up":"")+'">'+yes.avg.toFixed(1)+'</span> vs '+no.avg.toFixed(1)+
+      ' <small>'+(up?"▲":down?"▼":"≈")+' '+Math.abs(d).toFixed(1)+' ('+yes.n+'y/'+no.n+'n)</small></span>';
+  };
+  const collect = (def, lag) => {
+    const yes = [], no = [];
+    Object.keys(byDate).forEach(k => {
+      const v = def.get(byDate[k]);
+      if (v !== true && v !== false) return;
+      const targetKey = lag ? shiftKey(k, 1) : k;
+      const t = byDate[targetKey]; if (!t) return;
+      const a = anchorVal(t); if (!a) return;
+      (v ? yes : no).push(a);
+    });
+    const mean = arr => arr.length ? arr.reduce((x,y)=>x+y,0)/arr.length : 0;
+    return { yes: { n: yes.length, avg: mean(yes) }, no: { n: no.length, avg: mean(no) } };
+  };
+  let rows = "", strongest = null;
+  factorDefs.forEach(def => {
+    const same = collect(def, false), next = collect(def, true);
+    if (same.yes.n + same.no.n + next.yes.n + next.no.n === 0) return;
+    if (next.yes.n >= 5 && next.no.n >= 5) {
+      const gap = Math.abs(next.yes.avg - next.no.avg);
+      if (!strongest || gap > strongest.gap) strongest = { label: def.label, gap, dir: next.yes.avg >= next.no.avg };
+    }
+    rows += '<div class="corr-row"><div class="corr-name">'+esc(def.label)+'</div><div class="corr-cols">'+
+      '<div><div class="corr-cap">SAME DAY · YES vs NO</div>'+fmtPair(same.yes, same.no)+'</div>'+
+      '<div><div class="corr-cap">NEXT DAY · YES vs NO</div>'+fmtPair(next.yes, next.no)+'</div></div></div>';
+  });
+  if (!rows) return "";
+  let verdict = "";
+  if (strongest && strongest.gap >= 0.5)
+    verdict = '<p class="verdict">Biggest next-day gap so far: <b style="color:var(--text)">'+esc(strongest.label.toLowerCase())+'</b>, running '+strongest.gap.toFixed(1)+' '+(strongest.dir?'higher':'lower')+' the day after a yes.</p>';
+  return '<section class="section rise"><div class="label">WHAT MOVES '+esc(am.label.toUpperCase())+' · SAME DAY + NEXT DAY</div>'+
+    '<div class="card" style="padding:8px 16px">'+rows+'</div>'+verdict+
+    '<p class="tiny" style="margin-top:8px">SMALL NUMBERS — TREAT AS HINTS, NOT VERDICTS. SIX WEEKS OF LOGGING MAKES THIS REAL.</p></section>';
+}
+
+/* ---------- settings: anchor + factors + letters/nudges ---------- */
+function renderAnchorSeg() {
+  const act = activeMetrics();
+  $("anchor-seg").innerHTML = act.length
+    ? act.map(m => '<button class="'+(settings.anchor===m.key?"on":"")+'" data-anchor="'+esc(m.key)+'" style="flex:1 1 30%">'+esc(m.label.toUpperCase())+"</button>").join("")
+    : '<p class="nodata">ADD A METRIC FIRST</p>';
+}
+$("anchor-seg").addEventListener("click", ev => {
+  const b = ev.target.closest("[data-anchor]"); if (!b) return;
+  settings.anchor = b.dataset.anchor; saveSettings();
+  renderAnchorSeg(); renderStateCard();
+});
+let pendingFactorDel = null;
+function renderFactorsEditor() {
+  const F = settings.factors;
+  let h = F.map(f => '<div class="lrow"><div class="lmain"><div style="font-size:15px">'+esc(f.label)+'</div></div>'+
+    '<button class="mbtn'+(pendingFactorDel===f.key?'" style="color:var(--danger)':'"')+' data-fdel="'+esc(f.key)+'">'+(pendingFactorDel===f.key?"SURE?":"DELETE")+"</button></div>").join("");
+  if (F.length < 6) h += '<div class="lrow"><input class="field" id="factor-new" placeholder="e.g. Caffeine, Late screens, Weed" maxlength="20" style="margin:0" />'+
+    '<button class="mbtn" data-fadd="1" style="color:var(--accent)">ADD</button></div>';
+  $("factors-editor").innerHTML = h;
+}
+$("factors-editor").addEventListener("click", ev => {
+  const t = ev.target.closest("[data-fdel],[data-fadd]"); if (!t) return;
+  if (t.dataset.fadd) {
+    const i = $("factor-new"), label = (i.value||"").trim();
+    if (!label) { $("factor-note").textContent = "GIVE IT A NAME FIRST"; return; }
+    let key = slug(label), n = 2;
+    while (settings.factors.some(f => f.key === key)) key = slug(label)+"_"+n++;
+    settings.factors.push({ key, label });
+    saveSettings(); renderFactorsEditor(); buildTodayFactors();
+    $("factor-note").textContent = "ADDED — IT'S ON TODAY NOW";
+    return;
+  }
+  const k = t.dataset.fdel;
+  if (pendingFactorDel !== k) { pendingFactorDel = k; renderFactorsEditor(); return; }
+  settings.factors = settings.factors.filter(f => f.key !== k);
+  pendingFactorDel = null;
+  saveSettings(); renderFactorsEditor(); buildTodayFactors();
+  $("factor-note").textContent = "REMOVED — OLD DAYS KEEP THEIR DATA";
+});
+let pendingSelfDel = null;
+function renderSelfEditor() {
+  const L = selfData.letters, N = selfData.nudges;
+  let h = "";
+  if (!L.length && !N.length) h = '<p class="nodata" style="padding:12px 14px">NOTHING HERE YET — THESE GET WRITTEN ON CLEAR DAYS</p>';
+  L.slice().reverse().forEach(l => {
+    h += '<div class="lrow"><div class="lmain"><div class="ltxt">'+esc(l.text)+'</div><div class="lmeta">LETTER · '+fmtShort(l.on).toUpperCase()+'</div></div>'+
+      '<button class="mbtn'+(pendingSelfDel===l.id?'" style="color:var(--danger)':'"')+' data-sdel="'+esc(l.id)+'">'+(pendingSelfDel===l.id?"SURE?":"DELETE")+"</button></div>";
+  });
+  N.slice().reverse().forEach(nu => {
+    h += '<div class="lrow"><div class="lmain"><div class="ltxt'+(nu.doneOn?" ldone":"")+'">'+esc(nu.name)+'</div><div class="lmeta">REACH OUT · '+fmtShort(nu.on).toUpperCase()+(nu.doneOn?" · DONE "+fmtShort(nu.doneOn).toUpperCase():"")+'</div></div>'+
+      '<button class="mbtn" data-stgl="'+esc(nu.id)+'">'+(nu.doneOn?"UNDO":"DONE")+'</button>'+
+      '<button class="mbtn'+(pendingSelfDel===nu.id?'" style="color:var(--danger)':'"')+' data-sdel="'+esc(nu.id)+'">'+(pendingSelfDel===nu.id?"SURE?":"DELETE")+"</button></div>";
+  });
+  $("self-editor").innerHTML = h;
+}
+$("self-editor").addEventListener("click", ev => {
+  const t = ev.target.closest("[data-sdel],[data-stgl]"); if (!t) return;
+  if (t.dataset.stgl) {
+    const nu = selfData.nudges.find(x => x.id === t.dataset.stgl);
+    if (nu) { if (nu.doneOn) delete nu.doneOn; else nu.doneOn = todayKey(); persistSelf(); }
+    renderSelfEditor(); return;
+  }
+  const id = t.dataset.sdel;
+  if (pendingSelfDel !== id) { pendingSelfDel = id; renderSelfEditor(); return; }
+  selfData.letters = selfData.letters.filter(x => x.id !== id);
+  selfData.nudges = selfData.nudges.filter(x => x.id !== id);
+  pendingSelfDel = null; persistSelf(); renderSelfEditor();
+});
+
+/* ---------- doctor summary ---------- */
+function doctorSummary() {
+  const am = anchorMetric();
+  const cutoff = shiftKey(todayKey(), -89);
+  const span = sortedDesc().filter(e => e.date >= cutoff).sort((a,b) => a.date < b.date ? -1 : 1);
+  const first = span.length ? span[0].date : cutoff;
+  let md = "# Nightstand — 90-day self-report summary\n\n";
+  md += "Generated "+todayKey()+" · covers "+first+" to "+todayKey()+"\n\n";
+  md += "Self-reported daily ratings on a 1–5 scale, logged by the patient in a personal journal app. Not a clinical instrument.\n\n";
+  md += "## Logging\n\n- Days logged: "+span.length+" of 90\n";
+  const anchored = span.filter(e => anchorVal(e) > 0);
+  md += "- Days with a "+am.label.toLowerCase()+" rating: "+anchored.length+"\n\n";
+
+  md += "## "+am.label+" (primary signal)\n\n";
+  if (anchored.length) {
+    const vals = anchored.map(e => anchorVal(e));
+    const mean = vals.reduce((a,b)=>a+b,0)/vals.length;
+    const dist = [1,2,3,4,5].map(v => vals.filter(x=>x===v).length);
+    md += "- Mean: "+mean.toFixed(2)+" / 5\n";
+    md += "- Distribution: "+dist.map((n,i)=>(i+1)+"→"+n+"d").join(" · ")+"\n";
+    md += "- Days at 1–2 (low): "+(dist[0]+dist[1])+" · days at 4–5 (clear): "+(dist[3]+dist[4])+"\n";
+    let run = 0, maxRun = 0, prev = null;
+    anchored.forEach(e => {
+      const low = anchorVal(e) <= 2;
+      if (low && prev && shiftKey(prev,1) === e.date) run++;
+      else if (low) run = 1; else run = 0;
+      if (run > maxRun) maxRun = run;
+      prev = e.date;
+    });
+    md += "- Longest consecutive low stretch: "+maxRun+" day"+(maxRun===1?"":"s")+"\n\n";
+    md += "### Week by week (mean "+am.label.toLowerCase()+")\n\n";
+    const weeks = {};
+    anchored.forEach(e => {
+      const d = parseKey(e.date); const ws = new Date(d); ws.setDate(ws.getDate()-ws.getDay());
+      const wk = dateKey(ws);
+      (weeks[wk] = weeks[wk] || []).push(anchorVal(e));
+    });
+    Object.keys(weeks).sort().forEach(wk => {
+      const a = weeks[wk].reduce((x,y)=>x+y,0)/weeks[wk].length;
+      md += "- Week of "+wk+": "+a.toFixed(1)+" ("+weeks[wk].length+"d)\n";
+    });
+    md += "\n";
+  } else md += "No ratings in range.\n\n";
+
+  const others = settings.metrics.filter(m => m.key !== am.key);
+  if (others.length) {
+    md += "## Other tracked ratings\n\n";
+    others.forEach(m => {
+      const vals = span.map(e => (e.ratings && e.ratings[m.key])||0).filter(v=>v>0);
+      md += "- "+m.label+": "+(vals.length ? (vals.reduce((a,b)=>a+b,0)/vals.length).toFixed(2)+" / 5 over "+vals.length+"d" : "not logged")+"\n";
+    });
+    md += "\n";
+  }
+
+  md += "## Daily factors (self-logged yes/no)\n\n";
+  settings.factors.forEach(f => {
+    const logged = span.filter(e => e.factors && (e.factors[f.key] === true || e.factors[f.key] === false));
+    const yes = logged.filter(e => e.factors[f.key] === true).length;
+    md += "- "+f.label+": "+(logged.length ? yes+"/"+logged.length+" days yes ("+Math.round(yes/logged.length*100)+"%)" : "not logged")+"\n";
+  });
+  const trainDays = span.filter(e => trainedGroups(e).length).length;
+  const restMarked = span.filter(e => (e.gym||[]).includes(REST)).length;
+  md += "- Exercise: trained "+trainDays+" of "+span.length+" logged days"+(restMarked?" · "+restMarked+" marked rest":"")+"\n\n";
+
+  md += "## Observed associations (small-sample, correlational)\n\n";
+  const byDate = {}; span.forEach(e => { byDate[e.date] = e; });
+  const defs = settings.factors.map(f => ({ label: f.label, get: e => e.factors ? e.factors[f.key] : undefined }))
+    .concat([{ label: "Trained", get: e => (e.gym||[]).includes(REST) ? false : (trainedGroups(e).length ? true : undefined) }]);
+  let any = false;
+  defs.forEach(def => {
+    const yes = [], no = [];
+    Object.keys(byDate).forEach(k => {
+      const v = def.get(byDate[k]); if (v !== true && v !== false) return;
+      const t = byDate[shiftKey(k,1)]; if (!t) return;
+      const a = anchorVal(t); if (!a) return;
+      (v ? yes : no).push(a);
+    });
+    if (yes.length >= 4 && no.length >= 4) {
+      const my = yes.reduce((a,b)=>a+b,0)/yes.length, mn = no.reduce((a,b)=>a+b,0)/no.length;
+      md += "- Next-day "+am.label.toLowerCase()+" after "+def.label.toLowerCase()+": "+my.toFixed(1)+" (yes, n="+yes.length+") vs "+mn.toFixed(1)+" (no, n="+no.length+")\n";
+      any = true;
+    }
+  });
+  if (!any) md += "- Not enough paired days yet for stable comparisons.\n";
+  md += "\nPrepared by the patient for discussion. Correlations are descriptive only.\n";
+  return md;
+}
+$("export-doc").addEventListener("click", () => {
+  download(doctorSummary(), "text/markdown", "nightstand-doctor-summary-"+todayKey()+".md");
+  $("backup-note").textContent = "DOCTOR SUMMARY EXPORTED · LAST 90 DAYS";
+});
 
 /* boot */
 saveSettings();
@@ -1699,9 +2265,10 @@ applyTheme(settings.theme);
 buildKeypad();
 hydrateFor(entryDay);
 $("entry-text").placeholder = PROMPTS[Math.floor(Math.random()*PROMPTS.length)];
-buildRatings(); buildGym(); paintClock(); paintStreak(); paintWordCount(); paintLiveTags();
-autoGrow(); paintAutosave("idle"); renderOnThisDay();
-renderThemes(); renderMetrics(); renderGymSettings(); renderPinArea(); renderPlanner();
+if (!settings.metrics.some(m => m.key === settings.anchor)) { settings.anchor = settings.metrics[0] ? settings.metrics[0].key : "awareness"; saveSettings(); }
+buildRatings(); buildGym(); buildTodayFactors(); paintClock(); paintStreak(); paintWordCount(); paintLiveTags();
+autoGrow(); paintAutosave("idle"); renderOnThisDay(); renderStateCard();
+renderThemes(); renderMetrics(); renderGymSettings(); renderAnchorSeg(); renderFactorsEditor(); renderSelfEditor(); renderPinArea(); renderPlanner();
 if (settings.pin) maybeLock();
 </script>
 </body>
